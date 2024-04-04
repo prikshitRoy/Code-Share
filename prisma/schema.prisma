@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mongodb"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Account {
+  id                       String  @id @default(cuid()) @map("_id")
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.String
+  access_token             String? @db.String
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.String
+  session_state            String?
+  refresh_token_expires_in Int?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid()) @map("_id")
+  sessionToken String   @unique
+  expires      DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(name: "sessions")
+}
+
+model User {
+  id            String    @id @default(cuid()) @map("_id")
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+
+  snippets Snippet[]
+  accounts Account[]
+  sessions Session[]
+
+  @@map(name: "users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @id @map("_id")
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Snippet {
+  id String @id @default(cuid()) @map("_id")
+
+  title String?
+  code  String? @db.String
+
+  language    String  @default("typescript")
+  theme       String  @default("bubblegum")
+  fontFamily  String  @default("fira_code")
+  fontSize    String  @default("14")
+  lineNumbers Boolean @default(true)
+  padding     String  @default("32")
+
+  customColors Json?   @default("{}")
+  colorMode    String  @default("rgb")
+  angle        Int     @default(145)
+  grain        Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  views View?
+
+  @@index([userId])
+  @@map(name: "snippets")
+}
+
+model View {
+  count Int @default(0)
+
+  snippet   Snippet @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  snippetId String  @id @map("_id")
+
+  @@map(name: "views")
+}
