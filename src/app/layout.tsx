@@ -2,7 +2,7 @@ import "./globals.css";
 import { cn } from "@/lib/cn";
 import type { Metadata } from "next";
 /* import Header from "@/components/Header"; */
-/* import Providers from "@/contexts/Providers"; */
+import Providers from "@/contexts/Providers";
 import { SUPPORTED_FONT_STYLES as fonts } from "@/lib/fonts";
 
 export const metadata: Metadata = {
@@ -26,7 +26,9 @@ export default function RootLayout({
           "bg-almost-black text-greyish caret-fuchsia-500 selection:bg-fuchsia-500 selection:text-amlost-white"
         )}
       >
-        <main className={cn("grid place-items-center")}>{children}</main>
+        <Providers>
+          <main className={cn("grid place-items-center")}>{children}</main>
+        </Providers>
       </body>
     </html>
   );
