@@ -21,7 +21,6 @@ export default function Editor({
       className={cn("relative flex h-full w-full flex-col items-center p-6")}
     >
       {views !== undefined && <Views views={views} />}
-      Editor
       <Wrapper>
         <TitleBar editable={editable} />
         <Code editable={editable} />
