@@ -5,6 +5,7 @@ import Views from "./Views";
 import { cn } from "@/lib/cn";
 import Wrapper from "./Wrapper";
 import TitleBar from "./TitleBar";
+import Settings from "../Settings";
 
 export default function Editor({
   views,
@@ -21,10 +22,13 @@ export default function Editor({
       className={cn("relative flex h-full w-full flex-col items-center p-6")}
     >
       {views !== undefined && <Views views={views} />}
+
       <Wrapper>
         <TitleBar editable={editable} />
         <Code editable={editable} />
       </Wrapper>
+
+      {editable && <Settings />}
     </div>
   );
 }
