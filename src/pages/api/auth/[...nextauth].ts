@@ -5,17 +5,13 @@ import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-const isProd = process.env.NODE_ENV === "production";
-
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_URL,
   providers: [
     GithubProvider({
-      clientId: isProd ? process.env.GITHUB_ID! : process.env.GITHUB_LOCAL_ID!,
-      clientSecret: isProd
-        ? process.env.GITHUB_SECRET!
-        : process.env.GITHUB_LOCAL_SECRET!,
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
   callbacks: {
