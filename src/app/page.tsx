@@ -1,8 +1,10 @@
+import { getSession } from "@/lib/auth";
 import Editor from "@/components/Editor";
+
 import { redirect } from "next/navigation";
 
-export default function Home() {
-  const session = false;
+export default async function Home() {
+  const session = await getSession();
 
   const isAuthenticated = !!session;
 
