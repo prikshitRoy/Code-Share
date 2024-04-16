@@ -1,7 +1,7 @@
 import "./globals.css";
 import { cn } from "@/lib/cn";
 import type { Metadata } from "next";
-/* import Header from "@/components/Header"; */
+import Header from "@/components/Header";
 import Providers from "@/contexts/Providers";
 import { SUPPORTED_FONT_STYLES as fonts } from "@/lib/fonts";
 
@@ -27,6 +27,7 @@ export default function RootLayout({
         )}
       >
         <Providers>
+          <Header />
           <main className={cn("grid place-items-center")}>{children}</main>
         </Providers>
       </body>
