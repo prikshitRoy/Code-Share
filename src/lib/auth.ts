@@ -1,19 +1,39 @@
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { prisma } from "@/lib/prisma";
 
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
-import { Session, getServerSession } from "next-auth";
+import { NextAuthOptions } from "next-auth";
+import GithubProvider from "next-auth/providers/github";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-export async function getSession(
-  req?: NextApiRequest | GetServerSidePropsContext["req"],
-  res?: NextApiResponse | GetServerSidePropsContext["res"]
-) {
-  if (!req || !res) {
-    return (await getServerSession(authOptions)) as Session;
+function getGithubCredentials() {
+  const clientId = process.env.GITHUB_ID;
+  const clientSecret = process.env.GITHUB_SECRET;
+
+  if (!clientId || clientId.length === 0) {
+    throw new Error("No clientID for github provider set");
   }
 
-  return (await getServerSession(req, res, authOptions)) as Session;
+  if (!clientSecret || clientSecret.length === 0) {
+    throw new Error("No clientSecret for google provider set");
+  }
+
+  return { clientId, clientSecret };
 }
+
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    GithubProvider({
+      clientId: getGithubCredentials().clientId,
+      clientSecret: getGithubCredentials().clientSecret,
+    }),
+  ],
+  callbacks: {
+    async session({ session, user }) {
+      session.user.id = user.id;
+      return session;
+    },
+    redirect() {
+      return "/dashboard";
+    },
+  },
+};
