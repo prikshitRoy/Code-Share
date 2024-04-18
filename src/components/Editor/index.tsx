@@ -29,6 +29,8 @@ export default function Editor({
       </Wrapper>
 
       {editable && <Settings />}
+
+      {editable && isAuthenticated && <Settings />}
     </div>
   );
 }
