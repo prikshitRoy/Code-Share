@@ -5,7 +5,8 @@ import Views from "./Views";
 import { cn } from "@/lib/cn";
 import Wrapper from "./Wrapper";
 import TitleBar from "./TitleBar";
-import Settings from "../Settings";
+import ChangeListener from "./ChangeListener";
+import Settings from "@/components/Settings/index";
 
 export default function Editor({
   views,
@@ -30,7 +31,7 @@ export default function Editor({
 
       {editable && <Settings />}
 
-      {editable && isAuthenticated && <Settings />}
+      {editable && isAuthenticated && <ChangeListener />}
     </div>
   );
 }
