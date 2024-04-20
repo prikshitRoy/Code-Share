@@ -3,7 +3,7 @@ import { snap } from "@/lib/snap";
 import Loader from "../ui/Loader";
 
 import { useState } from "react";
-/* import { useSession } from "next-auth/react"; */
+import { useSession } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, X, Link, Copy, ImageIcon } from "lucide-react";
 
@@ -25,7 +25,7 @@ interface Button {
 }
 
 export default function Actions() {
-  /*   const { status: sessionStatus } = useSession(); */
+  const { status: sessionStatus } = useSession();
 
   const statusIcons = {
     SUCCESS: <Check size={16} aria-hidden="true" />,
@@ -45,7 +45,7 @@ export default function Actions() {
         ...statusIcons,
       },
       action: () => snap("COPY_LINK"),
-      isDisabled: false /* sessionStatus === "unauthenticated", */,
+      isDisabled: sessionStatus === "unauthenticated",
       hotKey: {
         key: "meta+shift+c",
         options: {
